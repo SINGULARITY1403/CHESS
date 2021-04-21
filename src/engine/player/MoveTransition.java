@@ -19,5 +19,9 @@ public class MoveTransition {
         return this.moveStatus;
     }
 
+    public Board getTransitionBoard(){
+        return this.transitionBoard;
+    }
+
     
 }

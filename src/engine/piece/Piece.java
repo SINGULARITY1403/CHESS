@@ -13,11 +13,11 @@ public abstract class Piece {
     protected final boolean FirstMove;
     private final int cachedHashcode;
    
-    public Piece(final PieceType pieceType, final Alliance pieceAlliance, final int piecePosition) {
+    public Piece(final PieceType pieceType, final Alliance pieceAlliance, final int piecePosition, final Boolean isFirstMove) {
         this.pieceType = pieceType;
         this.piecePosition = piecePosition;
         this.pieceAlliance = pieceAlliance;
-        this.FirstMove = false;
+        this.FirstMove = isFirstMove;
         this.cachedHashcode = generatedHashcode();
     }
 
@@ -48,6 +48,10 @@ public abstract class Piece {
         return this.pieceType;
     }
 
+    public int getPieceValue(){
+        return this.pieceType.getPieceValue();
+    }
+
     @Override
     public boolean equals(final Object X){
         if(this == X){
@@ -68,7 +72,7 @@ public abstract class Piece {
     }
 
     public enum PieceType{
-        PAWN("P") {
+        PAWN("P", 100) {
             @Override
             public boolean isKing() {
                 
@@ -80,7 +84,7 @@ public abstract class Piece {
                 return false;
             }
         },
-        ROOK("R") {
+        ROOK( "R", 500) {
             @Override
             public boolean isKing() {
                 
@@ -92,7 +96,7 @@ public abstract class Piece {
                 return true;
             }
         },
-        KNIGHT("N") {
+        KNIGHT("N", 300) {
             @Override
             public boolean isKing() {
                 
@@ -104,7 +108,7 @@ public abstract class Piece {
                 return false;
             }
         },
-        BISHOP("B") {
+        BISHOP("B", 300) {
             @Override
             public boolean isKing() {
                 
@@ -116,7 +120,7 @@ public abstract class Piece {
                 return false;
             }
         },
-        QUEEN("Q") {
+        QUEEN("Q", 900) {
             @Override
             public boolean isKing() {
                 
@@ -128,7 +132,7 @@ public abstract class Piece {
                 return false;
             }
         },
-        KING("K") {
+        KING("K", 10000) {
             @Override
             public boolean isKing() {
                 
@@ -142,14 +146,20 @@ public abstract class Piece {
         };
 
         private String pieceName;
+        private int pieceValue;
 
-        private PieceType(final String pieceName) {
+        private PieceType(final String pieceName, final int pieceValue) {
             this.pieceName  = pieceName;
+            this.pieceValue = pieceValue;
         }
 
         @Override
         public String toString() {
             return this.pieceName;
+        }
+
+        public int getPieceValue(){
+            return this.pieceValue;
         }
 
         public abstract boolean isKing();

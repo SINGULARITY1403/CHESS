@@ -13,7 +13,11 @@ public final class Queen extends Piece {
     private final static int[] CANDIDATE_MOVE_COORDINATES = { -9, -8, -7, -1, 1, 7, 8, 9 };
 
     public Queen(final Alliance alliance, final int piecePosition) {
-        super(PieceType.QUEEN ,alliance, piecePosition);
+        super(PieceType.QUEEN ,alliance, piecePosition, true);
+    }
+
+    public Queen(final Alliance alliance, final int piecePosition, final boolean isFirstMove) {
+        super(PieceType.QUEEN ,alliance, piecePosition, isFirstMove);
     }
 
     @Override
@@ -37,7 +41,7 @@ public final class Queen extends Piece {
                         final Piece pieceOnTile = candidateDestinationTile.getPiece();
                         final Alliance pieceAlliance = pieceOnTile.getAlliance();
                         if (this.pieceAlliance != pieceAlliance) {
-                            legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate, pieceOnTile));
+                            legalMoves.add(new Move.MajorAttackMove(board, this, candidateDestinationCoordinate, pieceOnTile));
                         }
                         break;
                     }

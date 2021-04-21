@@ -22,6 +22,7 @@ public final class Board {
     private final Collection<Piece> blackPieces;
     private final Map<Integer, Piece> boardConfig;
     private final Player currentPlayer;
+    private final Pawn enPassantPawn;
 
     private static final Board STANDARD_BOARD = createStandardBoard();
 
@@ -41,6 +42,7 @@ public final class Board {
         this.whitePieces = calculateActivePieces(this.gameboard, Alliance.WHITE);
         this.blackPieces = calculateActivePieces(this.gameboard, Alliance.BLACK);
         this.boardConfig = Collections.unmodifiableMap(builder.boardConfig);
+        this.enPassantPawn = builder.enPassantPawn;
 
         final Collection<Move> whiteStandardMoves = calculateLegalMoves(this.whitePieces);
         final Collection<Move> blackStandardMoves = calculateLegalMoves(this.blackPieces);
@@ -91,6 +93,10 @@ public final class Board {
         }
         return builder.toString();
     }    
+
+    public Pawn getEnPassantPawn(){
+        return this.enPassantPawn;
+    }
 
     public Player currentPlayer() {
         return this.currentPlayer;
@@ -159,7 +165,7 @@ public final class Board {
 
         Map<Integer, Piece> boardConfig;
         Alliance nextMoveMaker;
-        Pawn EnPassantPawn;
+        Pawn enPassantPawn;
 
         public Builder() {
             this.boardConfig = new HashMap<>();
@@ -179,8 +185,8 @@ public final class Board {
             return new Board(this);
         }
 
-        public void setEnPassantPawn(Pawn EnPassantPawn) {
-            this.EnPassantPawn = EnPassantPawn;
+        public void setEnPassantPawn(Pawn enPassantPawn) {
+            this.enPassantPawn = enPassantPawn;
         }
 
     }
