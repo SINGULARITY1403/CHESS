@@ -1,7 +1,0 @@
-{
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "/usr/share/java/guava-19.0.jar",
-        "/usr/share/java/guava.jar"
-    ]
-}

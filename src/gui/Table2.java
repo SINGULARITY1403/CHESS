@@ -27,11 +27,11 @@ import java.util.concurrent.ExecutionException;
 
 import static javax.swing.SwingUtilities.*;
 
-public class Table extends Observable{
+public class Table2 extends Observable{
 
     private final JFrame gameFrame;
-    private final GameHistoryPanel gameHistoryPanel;
-    private final TakenPiecesPanel takenPiecesPanel;
+    private final GameHistoryPanel2 gameHistoryPanel;
+    private final TakenPiecesPanel2 takenPiecesPanel;
     private final BoardPanel boardPanel;
     private final MoveLog moveLog;
     private Board chessBoard;
@@ -54,9 +54,9 @@ public class Table extends Observable{
     private static final Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
     private static String defaultPieceImagesPath = "art/";
 
-    private static final Table INSTANCE = new Table(Alliance.WHITE);
+    private static final Table2 INSTANCE = new Table2(Alliance.WHITE, Alliance.BLACK);
 
-    private Table(final Alliance user1Alliance) {
+    private Table2(final Alliance user1Alliance) {
         this.gameFrame = new JFrame("CHESS");
         final JMenuBar tableMenuBar = new JMenuBar();
         populateMenuBar(tableMenuBar);
@@ -65,8 +65,8 @@ public class Table extends Observable{
         this.chessBoard = Board.createStandardBoard();
         this.boardDirection = BoardDirection.NORMAL;
         this.highlightLegalMoves = false;
-        this.gameHistoryPanel = new GameHistoryPanel();
-        this.takenPiecesPanel = new TakenPiecesPanel();
+        this.gameHistoryPanel = new GameHistoryPanel2();
+        this.takenPiecesPanel = new TakenPiecesPanel2();
         this.boardPanel = new BoardPanel();
         this.moveLog = new MoveLog();
         this.addObserver(new TableGameAIWatcher());
@@ -79,7 +79,7 @@ public class Table extends Observable{
         humanAIPlayer(user1Alliance);
     }
 
-    private Table(final Alliance user1Alliance, final Alliance user2Alliance) {
+    private Table2(final Alliance user1Alliance, final Alliance user2Alliance) {
         this.gameFrame = new JFrame("CHESS");
         final JMenuBar tableMenuBar = new JMenuBar();
         populateMenuBar(tableMenuBar);
@@ -88,8 +88,8 @@ public class Table extends Observable{
         this.chessBoard = Board.createStandardBoard();
         this.boardDirection = BoardDirection.NORMAL;
         this.highlightLegalMoves = false;
-        this.gameHistoryPanel = new GameHistoryPanel();
-        this.takenPiecesPanel = new TakenPiecesPanel();
+        this.gameHistoryPanel = new GameHistoryPanel2();
+        this.takenPiecesPanel = new TakenPiecesPanel2();
         this.boardPanel = new BoardPanel();
         this.moveLog = new MoveLog();
         this.addObserver(new TableGameAIWatcher());
@@ -103,7 +103,7 @@ public class Table extends Observable{
         this.blackPlayerType = PlayerType.HUMAN;
     }
 
-    public static Table get() {
+    public static Table2 get() {
         return INSTANCE;
     }
 
@@ -119,11 +119,11 @@ public class Table extends Observable{
         return this.boardPanel;
     }
 
-    private GameHistoryPanel getGameHistoryPanel() {
+    private GameHistoryPanel2 getGameHistoryPanel() {
         return this.gameHistoryPanel;
     }
 
-    private TakenPiecesPanel getTakenPiecesPanel() {
+    private TakenPiecesPanel2 getTakenPiecesPanel() {
         return this.takenPiecesPanel;
     }
 
@@ -163,10 +163,10 @@ public class Table extends Observable{
     }
 
     public void show() {
-        Table.get().getMoveLog().clear();
-        Table.get().getGameHistoryPanel().redo(chessBoard, Table.get().getMoveLog());
-        Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
-        Table.get().getBoardPanel().drawBoard(Table.get().getGameBoard());
+        Table2.get().getMoveLog().clear();
+        Table2.get().getGameHistoryPanel().redo(chessBoard, Table2.get().getMoveLog());
+        Table2.get().getTakenPiecesPanel().redo(Table2.get().getMoveLog());
+        Table2.get().getBoardPanel().drawBoard(Table2.get().getGameBoard());
     }
 
     private void populateMenuBar(final JMenuBar tableMenuBar) {
@@ -223,8 +223,8 @@ public class Table extends Observable{
 
     //         @Override
     //         public void actionPerformed(ActionEvent e) {
-    //             Table.get().getGameSetup().promptUser();
-    //             Table.get().setupUpdate(Table.get().getGameSetup());
+    //             Table2.get().getGameSetup().promptUser();
+    //             Table2.get().setupUpdate(Table2.get().getGameSetup());
     //         }
     //     });
 
@@ -254,17 +254,17 @@ public class Table extends Observable{
     private static class TableGameAIWatcher implements Observer {
         @Override
         public void update(final Observable o, final Object arg){
-            if(Table.get().isAIPlayer(Table.get().getGameBoard().currentPlayer()) && !Table.get().getGameBoard().currentPlayer().isInCheckmate() && !Table.get().getGameBoard().currentPlayer().isInStalemate()){
+            if(Table2.get().isAIPlayer(Table2.get().getGameBoard().currentPlayer()) && !Table2.get().getGameBoard().currentPlayer().isInCheckmate() && !Table2.get().getGameBoard().currentPlayer().isInStalemate()){
                 final AIThinkTank thinkTank = new AIThinkTank();
                 thinkTank.execute();
             }
 
-            if(Table.get().getGameBoard().currentPlayer().isInCheckmate()){
-                System.out.println("Game Over, " + Table.get().getGameBoard().currentPlayer().isInCheckmate() + "is in CheckMate !" );
+            if(Table2.get().getGameBoard().currentPlayer().isInCheckmate()){
+                System.out.println("Game Over, " + Table2.get().getGameBoard().currentPlayer().isInCheckmate() + "is in CheckMate !" );
             }
 
-            if(Table.get().getGameBoard().currentPlayer().isInStalemate()){
-                System.out.println("Game Over, " + Table.get().getGameBoard().currentPlayer().isInStalemate() + "is in StaleMate !" );
+            if(Table2.get().getGameBoard().currentPlayer().isInStalemate()){
+                System.out.println("Game Over, " + Table2.get().getGameBoard().currentPlayer().isInStalemate() + "is in StaleMate !" );
             }
         }
     }
@@ -279,7 +279,7 @@ public class Table extends Observable{
             
             final MoveStrategy miniMax = new MiniMax(4);
             
-            final Move bestMove = miniMax.execute(Table.get().getGameBoard());
+            final Move bestMove = miniMax.execute(Table2.get().getGameBoard());
 
             return bestMove;
         }   
@@ -288,13 +288,13 @@ public class Table extends Observable{
         public void done(){
             try{
                 final Move bestMove = get();
-                Table.get().updateComputerMove(bestMove);
-                Table.get().updateGameBoard(Table.get().getGameBoard().currentPlayer().makeMove(bestMove).getTransitionBoard()); 
-                Table.get().getMoveLog().addMove(bestMove);
-                Table.get().getGameHistoryPanel().redo(Table.get().getGameBoard(), Table.get().getMoveLog());
-                Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
-                Table.get().getBoardPanel().drawBoard(Table.get().getGameBoard());
-                Table.get().moveMadeUpdate(PlayerType.COMPUTER);
+                Table2.get().updateComputerMove(bestMove);
+                Table2.get().updateGameBoard(Table2.get().getGameBoard().currentPlayer().makeMove(bestMove).getTransitionBoard()); 
+                Table2.get().getMoveLog().addMove(bestMove);
+                Table2.get().getGameHistoryPanel().redo(Table2.get().getGameBoard(), Table2.get().getMoveLog());
+                Table2.get().getTakenPiecesPanel().redo(Table2.get().getMoveLog());
+                Table2.get().getBoardPanel().drawBoard(Table2.get().getGameBoard());
+                Table2.get().moveMadeUpdate(PlayerType.COMPUTER);
 
             }
             catch(InterruptedException e){
@@ -448,7 +448,7 @@ public class Table extends Observable{
                         gameHistoryPanel.redo(chessBoard, moveLog);
                         takenPiecesPanel.redo(moveLog);
                         if(isAIPlayer(chessBoard.currentPlayer())){
-                            Table.get().moveMadeUpdate(PlayerType.HUMAN);
+                            Table2.get().moveMadeUpdate(PlayerType.HUMAN);
                         }
                         boardPanel.drawBoard(chessBoard);
                     });
@@ -482,7 +482,7 @@ public class Table extends Observable{
         }
 
         private void highlightLegals(final Board board) {
-            if (Table.get().getHighlightLegalMoves()) {
+            if (Table2.get().getHighlightLegalMoves()) {
                 for (final Move move : pieceLegalMoves(board)) {
                     if (move.getDestinationCoordinate() == this.tileId) {
                         try {
