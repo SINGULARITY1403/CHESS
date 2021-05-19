@@ -79,30 +79,6 @@ public class Table extends Observable{
         humanAIPlayer(user1Alliance);
     }
 
-    private Table(final Alliance user1Alliance, final Alliance user2Alliance) {
-        this.gameFrame = new JFrame("CHESS");
-        final JMenuBar tableMenuBar = new JMenuBar();
-        populateMenuBar(tableMenuBar);
-        this.gameFrame.setJMenuBar(tableMenuBar);
-        this.gameFrame.setLayout(new BorderLayout());
-        this.chessBoard = Board.createStandardBoard();
-        this.boardDirection = BoardDirection.NORMAL;
-        this.highlightLegalMoves = false;
-        this.gameHistoryPanel = new GameHistoryPanel();
-        this.takenPiecesPanel = new TakenPiecesPanel();
-        this.boardPanel = new BoardPanel();
-        this.moveLog = new MoveLog();
-        this.addObserver(new TableGameAIWatcher());
-        // this.gameSetup = new GameSetup(this.gameFrame, true);
-        this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
-        this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
-        this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
-        this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
-        this.gameFrame.setVisible(true);
-        this.whitePlayerType = PlayerType.HUMAN;
-        this.blackPlayerType = PlayerType.HUMAN;
-    }
-
     public static Table get() {
         return INSTANCE;
     }
@@ -171,7 +147,8 @@ public class Table extends Observable{
 
     private void populateMenuBar(final JMenuBar tableMenuBar) {
         tableMenuBar.add(createFileMenu());
-        tableMenuBar.add(createPreferencesMenu());
+        tableMenuBar.add(createFlipboard());
+        tableMenuBar.add(createHighlightMenuItem());
         // tableMenuBar.add(createOptionsMenu());
     }
 
@@ -190,9 +167,7 @@ public class Table extends Observable{
         return filesMenu;
     }
 
-    private JMenu createPreferencesMenu() {
-
-        final JMenu preferencesMenu = new JMenu("Preferences");
+    private JMenuItem createFlipboard() {
 
         final JMenuItem flipBoardMenuItem = new JMenuItem("Flip board");
 
@@ -201,17 +176,18 @@ public class Table extends Observable{
             boardPanel.drawBoard(chessBoard);
         });
 
-        preferencesMenu.add(flipBoardMenuItem);
-        preferencesMenu.addSeparator();
+        
 
+        return flipBoardMenuItem;
+    }
+
+    private JMenuItem createHighlightMenuItem() {
 
         final JCheckBoxMenuItem legalMoveHighlighter = new JCheckBoxMenuItem("Highlight Legal Moves", false);
 
-        legalMoveHighlighter.addActionListener(e -> highlightLegalMoves = legalMoveHighlighter.isSelected());
+        legalMoveHighlighter.addActionListener(e -> highlightLegalMoves = legalMoveHighlighter.isSelected());    
 
-        preferencesMenu.add(legalMoveHighlighter);
-
-        return preferencesMenu;
+        return legalMoveHighlighter;
     }
 
     // private JMenu createOptionsMenu(){
@@ -277,7 +253,7 @@ public class Table extends Observable{
         @Override
         protected Move doInBackground() throws Exception {
             
-            final MoveStrategy miniMax = new MiniMax(4);
+            final MoveStrategy miniMax = new MiniMax(1);
             
             final Move bestMove = miniMax.execute(Table.get().getGameBoard());
 
