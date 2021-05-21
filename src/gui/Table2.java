@@ -7,10 +7,8 @@ import src.engine.board.Tile;
 import src.engine.board.Move.MoveFactory;
 import src.engine.piece.Piece;
 import src.engine.player.MoveTransition;
-import src.engine.player.AI.MiniMax;
-import src.engine.player.AI.MoveStrategy;
-import src.engine.Alliance;
 import src.engine.player.Player;
+import src.engine.Alliance;
 
 import com.google.common.collect.Lists;
 
@@ -23,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import static javax.swing.SwingUtilities.*;
 
@@ -40,11 +37,8 @@ public class Table2 extends Observable{
     private Piece humanMovedPiece;
     private BoardDirection boardDirection;
     private boolean highlightLegalMoves;
-    // private final GameSetup gameSetup;
     private PlayerType whitePlayerType;
     private PlayerType blackPlayerType;
-
-    private Move computerMove;
 
     private Color lightTileColor = Color.decode("#FFFFFF");
     private Color darkTileColor = Color.decode("#606060");
@@ -58,6 +52,7 @@ public class Table2 extends Observable{
 
     private Table2(final Alliance user1Alliance, final Alliance user2Alliance) {
         this.gameFrame = new JFrame("CHESS");
+        this.gameFrame.setUndecorated(true);
         final JMenuBar tableMenuBar = new JMenuBar();
         populateMenuBar(tableMenuBar);
         this.gameFrame.setJMenuBar(tableMenuBar);
@@ -69,8 +64,7 @@ public class Table2 extends Observable{
         this.takenPiecesPanel = new TakenPiecesPanel2();
         this.boardPanel = new BoardPanel();
         this.moveLog = new MoveLog();
-        this.addObserver(new TableGameAIWatcher());
-        // this.gameSetup = new GameSetup(this.gameFrame, true);
+        this.addObserver(new TableGameWatcher());
         this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
@@ -109,25 +103,6 @@ public class Table2 extends Observable{
         return this.highlightLegalMoves;
     }
 
-    // private GameSetup getGameSetup(){
-    //     return this.gameSetup;
-    // }
-
-    boolean isAIPlayer(final Player player) {
-        if(player.getAlliance() == Alliance.WHITE) {
-            return getWhitePlayerType() == PlayerType.COMPUTER;
-        }
-        return getBlackPlayerType() == PlayerType.COMPUTER;
-    }
-
-    PlayerType getWhitePlayerType() {
-        return this.whitePlayerType;
-    }
-
-    PlayerType getBlackPlayerType() {
-        return this.blackPlayerType;
-    }
-
     public void show() {
         Table2.get().getMoveLog().clear();
         Table2.get().getGameHistoryPanel().redo(chessBoard, Table2.get().getMoveLog());
@@ -136,25 +111,22 @@ public class Table2 extends Observable{
     }
 
     private void populateMenuBar(final JMenuBar tableMenuBar) {
-        tableMenuBar.add(createFileMenu());
+        tableMenuBar.add(Exit());
         tableMenuBar.add(createFlipboard());
         tableMenuBar.add(createHighlightMenuItem());
-        // tableMenuBar.add(createOptionsMenu());
     }
 
-    private JMenu createFileMenu() {
-        final JMenu filesMenu = new JMenu("File");
+    private JMenuItem Exit() {
 
         final JMenuItem exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                System.exit(0);
+                Table2.get().gameFrame.dispose();
             }
         });
-        filesMenu.add(exitMenuItem);
 
-        return filesMenu;
+        return exitMenuItem;
     }
 
     private JMenuItem createFlipboard() {
@@ -165,8 +137,6 @@ public class Table2 extends Observable{
             boardDirection = boardDirection.opposite();
             boardPanel.drawBoard(chessBoard);
         });
-
-        
 
         return flipBoardMenuItem;
     }
@@ -180,36 +150,8 @@ public class Table2 extends Observable{
         return legalMoveHighlighter;
     }
 
-    // private JMenu createOptionsMenu(){
-    //     final JMenu optionsMenu = new JMenu("Options");
-
-    //     final JMenuItem setupGameMenuItem = new JMenuItem("Setup Game");
-
-    //     setupGameMenuItem.addActionListener(new ActionListener() {
-
-    //         @Override
-    //         public void actionPerformed(ActionEvent e) {
-    //             Table2.get().getGameSetup().promptUser();
-    //             Table2.get().setupUpdate(Table2.get().getGameSetup());
-    //         }
-    //     });
-
-    //     optionsMenu.add(setupGameMenuItem);
-
-    //     return optionsMenu;
-    // }
-
-    // private void setupUpdate(final GameSetup gameSetup){
-    //     setChanged();
-    //     notifyObservers(gameSetup);
-    // }
-
     public void updateGameBoard(final Board board){
         this.chessBoard = board;
-    }
-
-    public void updateComputerMove(final Move move){
-        this.computerMove = move;
     }
 
     private void moveMadeUpdate(final PlayerType playerType){
@@ -217,61 +159,30 @@ public class Table2 extends Observable{
         notifyObservers(playerType);
     }
 
-    private static class TableGameAIWatcher implements Observer {
-        @Override
-        public void update(final Observable o, final Object arg){
-            if(Table2.get().isAIPlayer(Table2.get().getGameBoard().currentPlayer()) && !Table2.get().getGameBoard().currentPlayer().isInCheckmate() && !Table2.get().getGameBoard().currentPlayer().isInStalemate()){
-                final AIThinkTank thinkTank = new AIThinkTank();
-                thinkTank.execute();
-            }
-
-            if(Table2.get().getGameBoard().currentPlayer().isInCheckmate()){
-                System.out.println("Game Over, " + Table2.get().getGameBoard().currentPlayer().isInCheckmate() + "is in CheckMate !" );
-            }
-
-            if(Table2.get().getGameBoard().currentPlayer().isInStalemate()){
-                System.out.println("Game Over, " + Table2.get().getGameBoard().currentPlayer().isInStalemate() + "is in StaleMate !" );
-            }
+    private void GameOver(final Player player){
+        JFrame frame = new JFrame("GAME OVER");
+        if (player.isInCheckmate()){
+            JOptionPane.showMessageDialog(frame, player.getOpponent().getAlliance() + " WON !!!");
+        }
+        else if(player.isInStalemate()){
+            JOptionPane.showMessageDialog(frame,  " DRAW !!!");
         }
     }
 
-    private static class AIThinkTank extends SwingWorker<Move, String>{
-        private AIThinkTank(){
-
-        }
-
+    private static class TableGameWatcher implements Observer {
         @Override
-        protected Move doInBackground() throws Exception {
-            
-            final MoveStrategy miniMax = new MiniMax(1);
-            
-            final Move bestMove = miniMax.execute(Table2.get().getGameBoard());
+        public void update(final Observable o, final Object arg){
 
-            return bestMove;
-        }   
+            if(Table2.get().getGameBoard().currentPlayer().isInCheckmate()){
+                System.out.println("Game Over, " + Table2.get().getGameBoard().currentPlayer().getAlliance() + "is in CheckMate !" );
+                Table2.get().GameOver(Table2.get().getGameBoard().currentPlayer());
+            }
 
-        @Override
-        public void done(){
-            try{
-                final Move bestMove = get();
-                Table2.get().updateComputerMove(bestMove);
-                Table2.get().updateGameBoard(Table2.get().getGameBoard().currentPlayer().makeMove(bestMove).getTransitionBoard()); 
-                Table2.get().getMoveLog().addMove(bestMove);
-                Table2.get().getGameHistoryPanel().redo(Table2.get().getGameBoard(), Table2.get().getMoveLog());
-                Table2.get().getTakenPiecesPanel().redo(Table2.get().getMoveLog());
-                Table2.get().getBoardPanel().drawBoard(Table2.get().getGameBoard());
-                Table2.get().moveMadeUpdate(PlayerType.COMPUTER);
-
+            if(Table2.get().getGameBoard().currentPlayer().isInStalemate()){
+                System.out.println("Game Over, " + Table2.get().getGameBoard().currentPlayer().getAlliance() + "is in StaleMate !" );
+                Table2.get().GameOver(Table2.get().getGameBoard().currentPlayer());
             }
-            catch(InterruptedException e){
-                e.printStackTrace();
-            }
-            catch(ExecutionException e){
-                e.printStackTrace();
-            }
-            
         }
-
     }
 
     private class BoardPanel extends JPanel {
@@ -303,10 +214,8 @@ public class Table2 extends Observable{
     }
 
     enum PlayerType{
-        HUMAN,
-        COMPUTER;
+        HUMAN
     }
-    
 
     enum BoardDirection {
         NORMAL {
@@ -413,9 +322,7 @@ public class Table2 extends Observable{
                     invokeLater(() -> {
                         gameHistoryPanel.redo(chessBoard, moveLog);
                         takenPiecesPanel.redo(moveLog);
-                        if(isAIPlayer(chessBoard.currentPlayer())){
-                            Table2.get().moveMadeUpdate(PlayerType.HUMAN);
-                        }
+                        Table2.get().moveMadeUpdate(PlayerType.HUMAN);
                         boardPanel.drawBoard(chessBoard);
                     });
                 }

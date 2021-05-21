@@ -40,9 +40,9 @@ public class Table extends Observable{
     private Piece humanMovedPiece;
     private BoardDirection boardDirection;
     private boolean highlightLegalMoves;
-    // private final GameSetup gameSetup;
     private PlayerType whitePlayerType;
     private PlayerType blackPlayerType;
+    private static int searchDepth;
 
     private Move computerMove;
 
@@ -54,10 +54,11 @@ public class Table extends Observable{
     private static final Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
     private static String defaultPieceImagesPath = "art/";
 
-    private static final Table INSTANCE = new Table(Alliance.WHITE);
+    private static final Table INSTANCE = new Table(Alliance.WHITE, 1);
 
-    private Table(final Alliance user1Alliance) {
+    private Table(final Alliance user1Alliance, final int searchDepth) {
         this.gameFrame = new JFrame("CHESS");
+        this.gameFrame.setUndecorated(true);
         final JMenuBar tableMenuBar = new JMenuBar();
         populateMenuBar(tableMenuBar);
         this.gameFrame.setJMenuBar(tableMenuBar);
@@ -70,13 +71,13 @@ public class Table extends Observable{
         this.boardPanel = new BoardPanel();
         this.moveLog = new MoveLog();
         this.addObserver(new TableGameAIWatcher());
-        // this.gameSetup = new GameSetup(this.gameFrame, true);
         this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         this.gameFrame.setVisible(true);
         humanAIPlayer(user1Alliance);
+        Table.searchDepth = searchDepth;
     }
 
     public static Table get() {
@@ -107,10 +108,6 @@ public class Table extends Observable{
     private boolean getHighlightLegalMoves() {
         return this.highlightLegalMoves;
     }
-
-    // private GameSetup getGameSetup(){
-    //     return this.gameSetup;
-    // }
 
     private void humanAIPlayer(final Alliance alliance) {
         if(alliance == Alliance.WHITE) {
@@ -146,25 +143,22 @@ public class Table extends Observable{
     }
 
     private void populateMenuBar(final JMenuBar tableMenuBar) {
-        tableMenuBar.add(createFileMenu());
+        tableMenuBar.add(Exit());
         tableMenuBar.add(createFlipboard());
         tableMenuBar.add(createHighlightMenuItem());
-        // tableMenuBar.add(createOptionsMenu());
     }
 
-    private JMenu createFileMenu() {
-        final JMenu filesMenu = new JMenu("File");
+    private JMenuItem Exit() {
 
         final JMenuItem exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                System.exit(0);
+                Table.get().gameFrame.dispose();
             }
         });
-        filesMenu.add(exitMenuItem);
 
-        return filesMenu;
+        return exitMenuItem;
     }
 
     private JMenuItem createFlipboard() {
@@ -190,30 +184,6 @@ public class Table extends Observable{
         return legalMoveHighlighter;
     }
 
-    // private JMenu createOptionsMenu(){
-    //     final JMenu optionsMenu = new JMenu("Options");
-
-    //     final JMenuItem setupGameMenuItem = new JMenuItem("Setup Game");
-
-    //     setupGameMenuItem.addActionListener(new ActionListener() {
-
-    //         @Override
-    //         public void actionPerformed(ActionEvent e) {
-    //             Table.get().getGameSetup().promptUser();
-    //             Table.get().setupUpdate(Table.get().getGameSetup());
-    //         }
-    //     });
-
-    //     optionsMenu.add(setupGameMenuItem);
-
-    //     return optionsMenu;
-    // }
-
-    // private void setupUpdate(final GameSetup gameSetup){
-    //     setChanged();
-    //     notifyObservers(gameSetup);
-    // }
-
     public void updateGameBoard(final Board board){
         this.chessBoard = board;
     }
@@ -227,6 +197,16 @@ public class Table extends Observable{
         notifyObservers(playerType);
     }
 
+    private void GameOver(final Player player){
+        JFrame frame = new JFrame("GAME OVER");
+        if (player.isInCheckmate()){
+            JOptionPane.showMessageDialog(frame, player.getOpponent().getAlliance() + " WON !!!");
+        }
+        else if(player.isInStalemate()){
+            JOptionPane.showMessageDialog(frame,  " DRAW !!!");
+        }
+    }
+
     private static class TableGameAIWatcher implements Observer {
         @Override
         public void update(final Observable o, final Object arg){
@@ -236,11 +216,13 @@ public class Table extends Observable{
             }
 
             if(Table.get().getGameBoard().currentPlayer().isInCheckmate()){
-                System.out.println("Game Over, " + Table.get().getGameBoard().currentPlayer().isInCheckmate() + "is in CheckMate !" );
+                System.out.println("Game Over, " + Table.get().getGameBoard().currentPlayer().getAlliance() + "is in CheckMate !" );
+                Table.get().GameOver(Table.get().getGameBoard().currentPlayer());
             }
 
             if(Table.get().getGameBoard().currentPlayer().isInStalemate()){
-                System.out.println("Game Over, " + Table.get().getGameBoard().currentPlayer().isInStalemate() + "is in StaleMate !" );
+                System.out.println("Game Over, " + Table.get().getGameBoard().currentPlayer().getAlliance() + "is in StaleMate !" );
+                Table.get().GameOver(Table.get().getGameBoard().currentPlayer());
             }
         }
     }
@@ -253,7 +235,7 @@ public class Table extends Observable{
         @Override
         protected Move doInBackground() throws Exception {
             
-            final MoveStrategy miniMax = new MiniMax(1);
+            final MoveStrategy miniMax = new MiniMax(searchDepth);
             
             final Move bestMove = miniMax.execute(Table.get().getGameBoard());
 
