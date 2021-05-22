@@ -11,6 +11,7 @@ import src.engine.player.AI.MiniMax;
 import src.engine.player.AI.MoveStrategy;
 import src.engine.Alliance;
 import src.engine.player.Player;
+import src.gui.Login;
 
 import com.google.common.collect.Lists;
 
@@ -33,6 +34,8 @@ public class Table extends Observable{
     private final GameHistoryPanel gameHistoryPanel;
     private final TakenPiecesPanel takenPiecesPanel;
     private final BoardPanel boardPanel;
+    private final UserNamePanel userNamePanel;
+    private final UserNamePanel userNamePanel2;
     private final MoveLog moveLog;
     private Board chessBoard;
     private Tile destinationTile;
@@ -43,18 +46,21 @@ public class Table extends Observable{
     private PlayerType whitePlayerType;
     private PlayerType blackPlayerType;
     private static int searchDepth;
+    String panelName1 = Login.get().getUser1Name();
+    String panelName2 = "Computer";
 
     private Move computerMove;
 
     private Color lightTileColor = Color.decode("#FFFFFF");
     private Color darkTileColor = Color.decode("#606060");
+    
 
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(600, 600);
     private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
     private static final Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
     private static String defaultPieceImagesPath = "art/";
 
-    private static final Table INSTANCE = new Table(Alliance.WHITE, 1);
+    private static final Table INSTANCE = new Table(Login.get().getUser1Alliance(), Login.get().getSearchDepth());
 
     private Table(final Alliance user1Alliance, final int searchDepth) {
         this.gameFrame = new JFrame("CHESS");
@@ -69,11 +75,15 @@ public class Table extends Observable{
         this.gameHistoryPanel = new GameHistoryPanel();
         this.takenPiecesPanel = new TakenPiecesPanel();
         this.boardPanel = new BoardPanel();
+        this.userNamePanel = new UserNamePanel(Login.get().getUser1Name());
+        this.userNamePanel2 = new UserNamePanel("Computer");
         this.moveLog = new MoveLog();
         this.addObserver(new TableGameAIWatcher());
         this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
+        this.gameFrame.add(this.userNamePanel, getDirection(Login.get().getUser1Alliance()));
+        this.gameFrame.add(this.userNamePanel2, getDirection(Login.get().getComputerAlliance()));
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         this.gameFrame.setVisible(true);
         humanAIPlayer(user1Alliance);
@@ -109,6 +119,14 @@ public class Table extends Observable{
         return this.highlightLegalMoves;
     }
 
+    private UserNamePanel getUserNamePanel1(){
+        return this.userNamePanel;
+    }
+
+    private UserNamePanel getUserNamePanel2(){
+        return this.userNamePanel2;
+    }
+ 
     private void humanAIPlayer(final Alliance alliance) {
         if(alliance == Alliance.WHITE) {
             blackPlayerType = PlayerType.COMPUTER;
@@ -133,6 +151,16 @@ public class Table extends Observable{
 
     PlayerType getBlackPlayerType() {
         return this.blackPlayerType;
+    }
+
+    String getDirection(final Alliance alliance){
+        if(alliance == Alliance.WHITE){
+            return BorderLayout.SOUTH;
+        }
+        else if(alliance == Alliance.BLACK){
+            return BorderLayout.NORTH;
+        }
+        return null;
     }
 
     public void show() {
@@ -168,6 +196,11 @@ public class Table extends Observable{
         flipBoardMenuItem.addActionListener(e -> {
             boardDirection = boardDirection.opposite();
             boardPanel.drawBoard(chessBoard);
+            Table.get().panelName1 = Table.get().panelName1 + Table.get().panelName2;  
+            Table.get().panelName2 = Table.get().panelName1.substring(0, Table.get().panelName1.length() - Table.get().panelName2.length());  
+            Table.get().panelName1 = Table.get().panelName1.substring(Table.get().panelName2.length());  
+            Table.get().getUserNamePanel1().swap(panelName1);
+            Table.get().getUserNamePanel2().swap(panelName2);
         });
 
         
@@ -292,6 +325,33 @@ public class Table extends Observable{
             repaint();
         }
 
+    }
+
+    private class UserNamePanel extends JPanel {
+
+        JLabel J = new JLabel();
+
+        UserNamePanel(final String string){
+            super(new BorderLayout());
+            setVisible( true );
+            setPreferredSize(new Dimension(50, 50));
+            setBorder(BorderFactory.createLineBorder(Color.black));
+            setBackground(Color.decode("#FFFFFF"));
+            J.setText(string);
+            J.setHorizontalAlignment(SwingConstants.CENTER);
+            add(J);
+            validate();
+        }
+
+        void swap(String Str){
+            removeAll();
+            J.setText(Str);
+            J.setHorizontalAlignment(SwingConstants.CENTER);
+            add(J);
+            validate();
+            repaint();
+        }
+        
     }
 
     enum PlayerType{

@@ -9,6 +9,7 @@ import src.engine.piece.Piece;
 import src.engine.player.MoveTransition;
 import src.engine.player.Player;
 import src.engine.Alliance;
+import src.gui.Login;
 
 import com.google.common.collect.Lists;
 
@@ -31,6 +32,8 @@ public class Table2 extends Observable{
     private final TakenPiecesPanel2 takenPiecesPanel;
     private final BoardPanel boardPanel;
     private final MoveLog moveLog;
+    private final UserNamePanel userNamePanel;
+    private final UserNamePanel userNamePanel2;
     private Board chessBoard;
     private Tile destinationTile;
     private Tile sourceTile;
@@ -39,6 +42,8 @@ public class Table2 extends Observable{
     private boolean highlightLegalMoves;
     private PlayerType whitePlayerType;
     private PlayerType blackPlayerType;
+    String panelName1 = Login2.get().getUser1Name();
+    String panelName2 = Login2.get().getUser2Name();
 
     private Color lightTileColor = Color.decode("#FFFFFF");
     private Color darkTileColor = Color.decode("#606060");
@@ -48,7 +53,7 @@ public class Table2 extends Observable{
     private static final Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
     private static String defaultPieceImagesPath = "art/";
 
-    private static final Table2 INSTANCE = new Table2(Alliance.WHITE, Alliance.BLACK);
+    private static final Table2 INSTANCE = new Table2(Login2.get().getUser1Alliance(), Login2.get().getUser2Alliance());
 
     private Table2(final Alliance user1Alliance, final Alliance user2Alliance) {
         this.gameFrame = new JFrame("CHESS");
@@ -64,10 +69,14 @@ public class Table2 extends Observable{
         this.takenPiecesPanel = new TakenPiecesPanel2();
         this.boardPanel = new BoardPanel();
         this.moveLog = new MoveLog();
+        this.userNamePanel = new UserNamePanel(Login2.get().getUser1Name());
+        this.userNamePanel2 = new UserNamePanel(Login2.get().getUser2Name());
         this.addObserver(new TableGameWatcher());
         this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
+        this.gameFrame.add(this.userNamePanel, BorderLayout.SOUTH);
+        this.gameFrame.add(this.userNamePanel2, BorderLayout.NORTH);
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         this.gameFrame.setVisible(true);
         this.whitePlayerType = PlayerType.HUMAN;
@@ -96,6 +105,14 @@ public class Table2 extends Observable{
 
     private TakenPiecesPanel2 getTakenPiecesPanel() {
         return this.takenPiecesPanel;
+    }
+
+    private UserNamePanel getUserNamePanel1(){
+        return this.userNamePanel;
+    }
+
+    private UserNamePanel getUserNamePanel2(){
+        return this.userNamePanel2;
     }
 
 
@@ -136,6 +153,11 @@ public class Table2 extends Observable{
         flipBoardMenuItem.addActionListener(e -> {
             boardDirection = boardDirection.opposite();
             boardPanel.drawBoard(chessBoard);
+            Table2.get().panelName1 = Table2.get().panelName1 + Table2.get().panelName2;  
+            Table2.get().panelName2 = Table2.get().panelName1.substring(0, Table2.get().panelName1.length() - Table2.get().panelName2.length());  
+            Table2.get().panelName1 = Table2.get().panelName1.substring(Table2.get().panelName2.length());  
+            Table2.get().getUserNamePanel1().swap(panelName1);
+            Table2.get().getUserNamePanel2().swap(panelName2);
         });
 
         return flipBoardMenuItem;
@@ -211,6 +233,33 @@ public class Table2 extends Observable{
             repaint();
         }
 
+    }
+
+    private class UserNamePanel extends JPanel {
+
+        JLabel J = new JLabel();
+
+        UserNamePanel(final String string){
+            super(new BorderLayout());
+            setVisible( true );
+            setPreferredSize(new Dimension(50, 50));
+            setBorder(BorderFactory.createLineBorder(Color.black));
+            setBackground(Color.decode("#FFFFFF"));
+            J.setText(string);
+            J.setHorizontalAlignment(SwingConstants.CENTER);
+            add(J);
+            validate();
+        }
+
+        void swap(String Str){
+            removeAll();
+            J.setText(Str);
+            J.setHorizontalAlignment(SwingConstants.CENTER);
+            add(J);
+            validate();
+            repaint();
+        }
+        
     }
 
     enum PlayerType{

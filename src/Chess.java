@@ -1,7 +1,6 @@
 package src;
 
-import src.gui.Table;
-import src.gui.Table2;
+import src.gui.*;
 import java.util.*;
 
 public class Chess {
@@ -14,10 +13,10 @@ public class Chess {
         S = sc.nextLine();
 
         if(S.equals("Multiplayer")){
-            Table2.get().show();
+            Login2.get().promptUser();
         }
         else if(S.equals("Singleplayer")){
-            Table.get().show();
+            Login.get().promptUser();
         }
 
     }
