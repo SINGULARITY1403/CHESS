@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="612.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.sample.menuController">
+    <top>
+        <AnchorPane prefHeight="116.0" prefWidth="600.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER">
+            <children>
+                <Label layoutX="259.0" layoutY="39.0" prefHeight="26.0" prefWidth="362.0" text="CODER'S CHESS" textFill="#f8faf8">
+                    <font>
+                        <Font name="Symbol" size="27.0" />
+                    </font>
+                </Label>
+            </children>
+        </AnchorPane>
+    </top>
+    <center>
+        <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="loginButton" layoutX="228.0" layoutY="100.0" mnemonicParsing="false" onAction="#loginButtonOnAction" prefHeight="92.0" prefWidth="310.0" text="LOGIN" />
+                <Button fx:id="registerButton" layoutX="228.0" layoutY="235.0" mnemonicParsing="false" onAction="#registerButtonOnAction" prefHeight="92.0" prefWidth="310.0" text="REGISTER" />
+                <Button fx:id="backButton1" layoutX="228.0" layoutY="367.0" mnemonicParsing="false" onAction="#backButton1OnAction" prefHeight="92.0" prefWidth="310.0" text="BACK" />
+            </children>
+        </AnchorPane>
+    </center>
+</BorderPane>

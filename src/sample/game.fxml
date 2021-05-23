@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="612.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.sample.gameMenuController">
+    <center>
+        <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER">
+            <children>
+                <Label layoutX="281.0" layoutY="36.0" prefHeight="38.0" prefWidth="412.0" text="CODER'S CHESS" textFill="WHITE">
+                    <font>
+                        <Font name="Symbol" size="27.0" />
+                    </font>
+                </Label>
+                <Button fx:id="playGameButton" layoutX="219.0" layoutY="194.0" mnemonicParsing="false" onAction="#playGameButtonOnAction" prefHeight="74.0" prefWidth="310.0" text="PLAY GAME " />
+                <Button fx:id="gameStatsButton" layoutX="219.0" layoutY="306.0" mnemonicParsing="false" onAction="#gameStatsButtonOnAction" prefHeight="74.0" prefWidth="310.0" text="GAME STATS" />
+                <Button fx:id="closeDirectGameButton" layoutX="219.0" layoutY="415.0" mnemonicParsing="false" onAction="#closeDirectGameButtonOnAction" prefHeight="74.0" prefWidth="310.0" text="CLOSE" />
+                <Button fx:id="modifyUserNameButton" layoutX="583.0" layoutY="112.0" mnemonicParsing="false" onAction="#modifyUserNameButtonOnAction" prefHeight="42.0" prefWidth="134.0" text="MODIFY USER-NAME" />
+                <Button fx:id="deleteUserAccountButton" layoutX="583.0" layoutY="507.0" mnemonicParsing="false" onAction="#deleteUserAccountButtonOnAction" prefHeight="42.0" prefWidth="134.0" text="DELETE ACCOUNT" />
+            </children>
+        </AnchorPane>
+    </center>
+</BorderPane>
