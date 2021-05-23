@@ -3,11 +3,12 @@ package src.gui;
 import src.engine.Alliance;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Login extends JDialog {
+public class Login extends JFrame {
 
     private Alliance user1Alliance;
     private Alliance computerAlliance;
@@ -20,15 +21,16 @@ public class Login extends JDialog {
     private static final Login INSTANCE = new Login();
 
     public Login() {
+        setSize(new Dimension(300, 400));
+        setUndecorated(true);
         final JPanel myPanel = new JPanel(new GridLayout(0, 1));
         final JRadioButton user1WhiteButton = new JRadioButton(WHITE_ALLIANCE);
         final JRadioButton user1BlackButton = new JRadioButton(BLACK_ALLIANCE);
         user1WhiteButton.setActionCommand(WHITE_ALLIANCE);
-        final ButtonGroup whiteGroup = new ButtonGroup();
-        whiteGroup.add(user1WhiteButton);
+        final ButtonGroup User1 = new ButtonGroup();
+        User1.add(user1WhiteButton);
+        User1.add(user1BlackButton);
 
-        final ButtonGroup blackGroup = new ButtonGroup();
-        blackGroup.add(user1BlackButton);
 
         getContentPane().add(myPanel);
         myPanel.add(new JLabel("UserName 1"));
@@ -47,23 +49,22 @@ public class Login extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 user1Alliance = user1WhiteButton.isSelected() ? Alliance.WHITE : Alliance.BLACK;
                 computerAlliance = user1WhiteButton.isSelected() ?  Alliance.BLACK : Alliance.WHITE;
-                Login.this.setVisible(false);
-                Table.get().show();
                 dispose();
+                Table.get().show();
             }
         });
 
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Cancel");
-                Login.this.setVisible(false);
+                dispose();
             }
         });
 
         myPanel.add(cancelButton);
         myPanel.add(okButton);
 
-        pack();
+        setLocationRelativeTo(null);
         setVisible(false);
     }
 

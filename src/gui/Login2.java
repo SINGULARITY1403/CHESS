@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Login2 extends JDialog {
+public class Login2 extends JFrame {
 
     private Alliance user1Alliance;
     private Alliance user2Alliance;
@@ -19,19 +19,21 @@ public class Login2 extends JDialog {
     private static final Login2 INSTANCE = new Login2();
 
     public Login2() {
+        setSize(new Dimension(300, 400));
         final JPanel myPanel = new JPanel(new GridLayout(0, 1));
         final JRadioButton user1WhiteButton = new JRadioButton(WHITE_ALLIANCE);
         final JRadioButton user2WhiteButton = new JRadioButton(WHITE_ALLIANCE);
         final JRadioButton user1BlackButton = new JRadioButton(BLACK_ALLIANCE);
         final JRadioButton user2BlackButton = new JRadioButton(BLACK_ALLIANCE);
         user1WhiteButton.setActionCommand(WHITE_ALLIANCE);
-        final ButtonGroup whiteGroup = new ButtonGroup();
-        whiteGroup.add(user1WhiteButton);
-        whiteGroup.add(user2WhiteButton);
+        final ButtonGroup User1 = new ButtonGroup();
+        User1.add(user1WhiteButton);
+        User1.add(user1BlackButton);
 
-        final ButtonGroup blackGroup = new ButtonGroup();
-        blackGroup.add(user1BlackButton);
-        blackGroup.add(user2BlackButton);
+        final ButtonGroup User2 = new ButtonGroup();
+        User2.add(user2WhiteButton);
+        User2.add(user2BlackButton);
+
 
         getContentPane().add(myPanel);
         myPanel.add(new JLabel("UserName 1"));
@@ -52,23 +54,23 @@ public class Login2 extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 user1Alliance = user1WhiteButton.isSelected() ? Alliance.WHITE : Alliance.BLACK;
                 user2Alliance = user2WhiteButton.isSelected() ? Alliance.WHITE : Alliance.BLACK;
-                Login2.this.setVisible(false);
-                Table2.get().show();
                 dispose();
+                Table2.get().show();
+                
             }
         });
 
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Cancel");
-                Login2.this.setVisible(false);
+                dispose();
             }
         });
 
         myPanel.add(cancelButton);
         myPanel.add(okButton);
 
-        pack();
+        setLocationRelativeTo(null);
         setVisible(false);
     }
 

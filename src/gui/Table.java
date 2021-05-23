@@ -86,6 +86,7 @@ public class Table extends Observable{
         this.gameFrame.add(this.userNamePanel2, getDirection(Login.get().getComputerAlliance()));
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         this.gameFrame.setVisible(true);
+        this.gameFrame.setLocationRelativeTo(null);
         humanAIPlayer(user1Alliance);
         Table.searchDepth = searchDepth;
     }
