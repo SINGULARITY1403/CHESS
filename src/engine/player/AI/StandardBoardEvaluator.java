@@ -10,7 +10,12 @@ public final class StandardBoardEvaluator implements BoardEvaluator{
     private static final int CHECKMATE_BONUS = 100;
     private static final int DEPTH_BONUS = 100;
     private static final int CASTLED_BONUS = 60;
+    private static final StandardBoardEvaluator INSTANCE = new StandardBoardEvaluator();
 
+    public static StandardBoardEvaluator get() {
+        return INSTANCE;
+    }
+    
     @Override
     public int evaulate(final Board board, final int depth) {
 

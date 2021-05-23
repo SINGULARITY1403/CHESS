@@ -6,13 +6,18 @@ import src.engine.board.Move;
 public class MoveTransition {
 
     private final Board transitionBoard;
-    private final Move move;
     private final MoveStatus moveStatus;
+    private final Board fromBoard;
+    private final Move transitionMove;
     
-    public MoveTransition(final Board transitionBoard,final Move move,final MoveStatus moveStatus) {
-        this.transitionBoard = transitionBoard;
-        this.move = move;
+    public MoveTransition(final Board fromBoard,
+                            final Board transitionBoard,
+                            final MoveStatus moveStatus,
+                            final Move transitionMove) {
+        this.fromBoard = fromBoard;
+        this.transitionMove = transitionMove;
         this.moveStatus = moveStatus;
+        this.transitionBoard = transitionBoard;
     }
 
     public MoveStatus getMoveStatus() {
@@ -23,5 +28,12 @@ public class MoveTransition {
         return this.transitionBoard;
     }
 
+    public Board getFromBoard() {
+        return this.fromBoard;
+    }
+
+    public Move getTransitionMove() {
+        return this.transitionMove;
+    }
     
 }

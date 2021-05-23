@@ -9,14 +9,29 @@ import java.util.*;
 
 public final class King extends Piece {
 
+    private final boolean isCastled;
+    private final boolean kingSideCastleCapable;
+    private final boolean queenSideCastleCapable;
+
     private final static int[] CANDIDATE_MOVE_COORDINATES = { -9, -8, -7, -1, 1, 7, 8, 9 };
 
-    public King(final Alliance alliance, final int piecePosition) {
+    public King(final Alliance alliance, final int piecePosition,
+    final boolean kingSideCastleCapable,
+    final boolean queenSideCastleCapable) {
         super(PieceType.KING ,alliance, piecePosition, true);
+        this.isCastled = false;
+        this.kingSideCastleCapable = kingSideCastleCapable;
+        this.queenSideCastleCapable = queenSideCastleCapable;
     }
 
-    public King(final Alliance alliance, final int piecePosition, final boolean isFirstMove) {
+    public King(final Alliance alliance, final int piecePosition, final boolean isFirstMove,
+    final boolean isCastled,
+    final boolean kingSideCastleCapable,
+    final boolean queenSideCastleCapable) {
         super(PieceType.KING ,alliance, piecePosition, isFirstMove);
+        this.isCastled = isCastled;
+        this.kingSideCastleCapable = kingSideCastleCapable;
+        this.queenSideCastleCapable = queenSideCastleCapable;
     }
 
     @Override
@@ -50,9 +65,21 @@ public final class King extends Piece {
         return PieceType.KING.toString();
     }
 
+    public boolean isKingSideCastleCapable() {
+        return this.kingSideCastleCapable;
+    }
+
+    public boolean isQueenSideCastleCapable() {
+        return this.queenSideCastleCapable;
+    }
+
+    public boolean isCastled(){
+        return this.isCastled;
+    }
+
     @Override
     public King movePiece(Move move) {
-        return new King(move.getMovedPiece().getAlliance(), move.getDestinationCoordinate());
+        return new King(move.getMovedPiece().getAlliance(), move.getDestinationCoordinate(),false, move.isCastlingMove(), false, false);
     }
 
     private static boolean isFirstColumnExclusion(final int currentCandidate,

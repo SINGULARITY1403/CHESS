@@ -9,8 +9,6 @@ public abstract class Move {
     protected final Piece movedPiece;
     protected final int destinatinationCoordinate;
     protected final boolean isFirstMove;
-
-    public static final Move NULL_MOVE = new NullMove();
     
     private Move(final Board board, final Piece movedPiece,final int destinatinationCoordinate) {
         this.board = board;
@@ -451,9 +449,15 @@ public abstract class Move {
     }
     
     public static class MoveFactory{
+
+        private static final Move NULL_MOVE = new NullMove();
         
         private MoveFactory(){
             throw new RuntimeException("Not Instantiable");
+        }
+
+        public static Move getNullMove() {
+            return NULL_MOVE;
         }
 
         public static Move createMove(final Board board,final int currentCoordinate,final int destinatinationCoordinate){

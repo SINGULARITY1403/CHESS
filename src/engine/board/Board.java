@@ -1,6 +1,7 @@
 package src.engine.board;
 
 import src.engine.Alliance;
+import src.engine.board.Move.MoveFactory;
 import src.engine.piece.Bishop;
 import src.engine.piece.King;
 import src.engine.piece.Knight;
@@ -14,6 +15,8 @@ import src.engine.player.WhitePlayer;
 import com.google.common.collect.Iterables;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class Board {
 
@@ -23,6 +26,7 @@ public final class Board {
     private final Map<Integer, Piece> boardConfig;
     private final Player currentPlayer;
     private final Pawn enPassantPawn;
+    private final Move transitionMove;
 
     private static final Board STANDARD_BOARD = createStandardBoard();
 
@@ -50,6 +54,7 @@ public final class Board {
         this.whitePlayer = new WhitePlayer(this, whiteStandardMoves, blackStandardMoves);
         this.blackPlayer = new BlackPlayer(this, blackStandardMoves, whiteStandardMoves);
         this.currentPlayer =  builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
+        this.transitionMove = builder.transitionMove != null ? builder.transitionMove : MoveFactory.getNullMove();
     }
 
     private List<Tile> createGameboard(Builder builder) {
@@ -94,8 +99,16 @@ public final class Board {
         return builder.toString();
     }    
 
+    public Collection<Piece> getAllPieces() {
+        return Stream.concat(this.whitePieces.stream(), this.blackPieces.stream()).collect(Collectors.toList());
+    }
+
     public Pawn getEnPassantPawn(){
         return this.enPassantPawn;
+    }
+
+    public Move getTransitionMove() {
+        return this.transitionMove;
     }
 
     public Player currentPlayer() {
@@ -121,7 +134,7 @@ public final class Board {
         builder.setPiece(new Knight(Alliance.BLACK, 1));
         builder.setPiece(new Bishop(Alliance.BLACK, 2));
         builder.setPiece(new Queen(Alliance.BLACK, 3));
-        builder.setPiece(new King(Alliance.BLACK, 4));
+        builder.setPiece(new King(Alliance.BLACK, 4,true,true));
         builder.setPiece(new Bishop(Alliance.BLACK, 5));
         builder.setPiece(new Knight(Alliance.BLACK, 6));
         builder.setPiece(new Rook(Alliance.BLACK, 7));
@@ -146,7 +159,7 @@ public final class Board {
         builder.setPiece(new Knight(Alliance.WHITE, 57));
         builder.setPiece(new Bishop(Alliance.WHITE, 58));
         builder.setPiece(new Queen(Alliance.WHITE, 59));
-        builder.setPiece(new King(Alliance.WHITE, 60));
+        builder.setPiece(new King(Alliance.WHITE, 60,true,true));
         builder.setPiece(new Bishop(Alliance.WHITE, 61));
         builder.setPiece(new Knight(Alliance.WHITE, 62));
         builder.setPiece(new Rook(Alliance.WHITE, 63));
@@ -166,6 +179,7 @@ public final class Board {
         Map<Integer, Piece> boardConfig;
         Alliance nextMoveMaker;
         Pawn enPassantPawn;
+        Move transitionMove;
 
         public Builder() {
             this.boardConfig = new HashMap<>();

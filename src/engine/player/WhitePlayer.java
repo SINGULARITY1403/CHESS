@@ -65,5 +65,8 @@ public class WhitePlayer extends Player{
         return Collections.unmodifiableList(kingCastles);
     }
 
-    
+    @Override
+    public String toString() {
+        return "White";
+    }
 }
