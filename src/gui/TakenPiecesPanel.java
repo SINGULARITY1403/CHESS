@@ -46,7 +46,7 @@ class TakenPiecesPanel extends JPanel {
         setPreferredSize(TAKEN_PIECES_PANEL_DIMENSION);
     }
 
-    public void redo(final MoveLog moveLog) {
+    public void redo(final Table.MoveLog moveLog) {
         southPanel.removeAll();
         northPanel.removeAll();
         
@@ -82,12 +82,9 @@ class TakenPiecesPanel extends JPanel {
         
         for (final Piece takenPiece : whiteTakenPieces) {
             try {
-                final BufferedImage image = ImageIO.read(new File("Images folder/"
-                        + takenPiece.getAlliance().toString().substring(0, 1) + "" + takenPiece.toString()
-                        + ".gif"));
+                final BufferedImage image = ImageIO.read(new File("Images folder/" + takenPiece.getAlliance().toString().substring(0, 1) + "" + takenPiece.toString() + ".gif"));
                 final ImageIcon ic = new ImageIcon(image);
-                final JLabel imageLabel = new JLabel(new ImageIcon(ic.getImage().getScaledInstance(
-                        ic.getIconWidth() - 30, ic.getIconWidth() - 30, Image.SCALE_SMOOTH)));
+                final JLabel imageLabel = new JLabel(new ImageIcon(ic.getImage().getScaledInstance(ic.getIconWidth() - 30, ic.getIconWidth() - 30, Image.SCALE_SMOOTH)));
                 this.southPanel.add(imageLabel);
             }
             catch (final IOException e) {
@@ -97,12 +94,70 @@ class TakenPiecesPanel extends JPanel {
 
         for (final Piece takenPiece : blackTakenPieces) {
             try {
-                final BufferedImage image = ImageIO.read(new File("Images folder/"
-                        + takenPiece.getAlliance().toString().substring(0, 1) + "" + takenPiece.toString()
-                        + ".gif"));
+                final BufferedImage image = ImageIO.read(new File("Images folder/" + takenPiece.getAlliance().toString().substring(0, 1) + "" + takenPiece.toString() + ".gif"));
                 final ImageIcon ic = new ImageIcon(image);
-                final JLabel imageLabel = new JLabel(new ImageIcon(ic.getImage().getScaledInstance(
-                        ic.getIconWidth() - 30, ic.getIconWidth() - 30, Image.SCALE_SMOOTH)));
+                final JLabel imageLabel = new JLabel(new ImageIcon(ic.getImage().getScaledInstance( ic.getIconWidth() - 30, ic.getIconWidth() - 30, Image.SCALE_SMOOTH)));
+                this.northPanel.add(imageLabel);
+
+            } catch (final IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        validate();
+    }
+
+    public void redo(final Table2.MoveLog moveLog) {
+        southPanel.removeAll();
+        northPanel.removeAll();
+        
+        final List<Piece> whiteTakenPieces = new ArrayList<>();
+        final List<Piece> blackTakenPieces = new ArrayList<>();
+        
+        for(final Move move : moveLog.getMoves()) {
+            if(move.isAttack()) {
+                final Piece takenPiece = move.getAttackedPiece();
+                if(takenPiece.getAlliance().isWhite()) {
+                    whiteTakenPieces.add(takenPiece);
+                } else if(takenPiece.getAlliance().isBlack()){
+                    blackTakenPieces.add(takenPiece);
+                } else {
+                    throw new RuntimeException("Should not reach here!");
+                }
+            }
+        }
+
+        Collections.sort(whiteTakenPieces, new Comparator<Piece>() {
+            @Override
+            public int compare(final Piece p1, final Piece p2) {
+                return Ints.compare(p1.getPieceValue(), p2.getPieceValue());
+            }
+        });
+
+        Collections.sort(blackTakenPieces, new Comparator<Piece>() {
+            @Override
+            public int compare(final Piece p1, final Piece p2) {
+                return Ints.compare(p1.getPieceValue(), p2.getPieceValue());
+            }
+        });
+        
+        for (final Piece takenPiece : whiteTakenPieces) {
+            try {
+                final BufferedImage image = ImageIO.read(new File("Images folder/" + takenPiece.getAlliance().toString().substring(0, 1) + "" + takenPiece.toString() + ".gif"));
+                final ImageIcon ic = new ImageIcon(image);
+                final JLabel imageLabel = new JLabel(new ImageIcon(ic.getImage().getScaledInstance(ic.getIconWidth() - 30, ic.getIconWidth() - 30, Image.SCALE_SMOOTH)));
+                this.southPanel.add(imageLabel);
+            }
+            catch (final IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        for (final Piece takenPiece : blackTakenPieces) {
+            try {
+                final BufferedImage image = ImageIO.read(new File("Images folder/" + takenPiece.getAlliance().toString().substring(0, 1) + "" + takenPiece.toString() + ".gif"));
+                final ImageIcon ic = new ImageIcon(image);
+                final JLabel imageLabel = new JLabel(new ImageIcon(ic.getImage().getScaledInstance( ic.getIconWidth() - 30, ic.getIconWidth() - 30, Image.SCALE_SMOOTH)));
                 this.northPanel.add(imageLabel);
 
             } catch (final IOException e) {

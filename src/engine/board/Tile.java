@@ -16,6 +16,7 @@ public abstract class Tile {
 
     private static final Map<Integer, EmptyTile> EMPTY_TILES = createAllPossibleTiles();
 
+    // Initializing all Emoty Tiles
     private static Map<Integer, EmptyTile> createAllPossibleTiles() {
         final Map<Integer, EmptyTile> emptyTiles = new HashMap<>();
 
@@ -27,9 +28,14 @@ public abstract class Tile {
 
     }
 
+    //Creating Tile
     public static Tile createTile(final int Coordinate, final Piece piece){
         if(piece != null) return new OccupiedTile(Coordinate, piece);
         else return EMPTY_TILES.get(Coordinate);
+    }
+
+    public int getTileCoordinate() {
+        return this.tileCoordinate;
     }
 
     public static final class OccupiedTile extends Tile{
@@ -80,10 +86,5 @@ public abstract class Tile {
         }
 
     }
-
-    public int getTileCoordinate() {
-        return this.tileCoordinate;
-    }
-
     
 }

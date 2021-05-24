@@ -28,8 +28,8 @@ import static javax.swing.SwingUtilities.*;
 public class Table2 extends Observable{
 
     private final JFrame gameFrame;
-    private final GameHistoryPanel2 gameHistoryPanel;
-    private final TakenPiecesPanel2 takenPiecesPanel;
+    private final GameHistoryPanel gameHistoryPanel;
+    private final TakenPiecesPanel takenPiecesPanel;
     private final BoardPanel boardPanel;
     private final MoveLog moveLog;
     private final UserNamePanel userNamePanel;
@@ -63,8 +63,8 @@ public class Table2 extends Observable{
         this.chessBoard = Board.createStandardBoard();
         this.boardDirection = BoardDirection.NORMAL;
         this.highlightLegalMoves = false;
-        this.gameHistoryPanel = new GameHistoryPanel2();
-        this.takenPiecesPanel = new TakenPiecesPanel2();
+        this.gameHistoryPanel = new GameHistoryPanel();
+        this.takenPiecesPanel = new TakenPiecesPanel();
         this.boardPanel = new BoardPanel();
         this.moveLog = new MoveLog();
         this.userNamePanel = new UserNamePanel(Login2.get().getUser1Name());
@@ -96,11 +96,11 @@ public class Table2 extends Observable{
         return this.boardPanel;
     }
 
-    private GameHistoryPanel2 getGameHistoryPanel() {
+    private GameHistoryPanel getGameHistoryPanel() {
         return this.gameHistoryPanel;
     }
 
-    private TakenPiecesPanel2 getTakenPiecesPanel() {
+    private TakenPiecesPanel getTakenPiecesPanel() {
         return this.takenPiecesPanel;
     }
 

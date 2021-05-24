@@ -12,7 +12,6 @@ import javax.swing.table.DefaultTableModel;
 
 import src.engine.board.Board;
 import src.engine.board.Move;
-import src.gui.Table.MoveLog;
 
 class GameHistoryPanel extends JPanel {
 
@@ -32,8 +31,38 @@ class GameHistoryPanel extends JPanel {
         this.setVisible(true);
     }
 
-    void redo(final Board board,
-              final MoveLog moveHistory) {
+    void redo(final Board board,final Table.MoveLog moveHistory) {
+        int currentRow = 0;
+        this.model.clear();
+        for (final Move move : moveHistory.getMoves()) {
+            final String moveText = move.toString();
+            if (move.getMovedPiece().getAlliance().isWhite()) {
+                this.model.setValueAt(moveText, currentRow, 0);
+            }
+            else if (move.getMovedPiece().getAlliance().isBlack()) {
+                this.model.setValueAt(moveText, currentRow, 1);
+                currentRow++;
+            }
+        }
+
+        if(moveHistory.getMoves().size() > 0) {
+            final Move lastMove = moveHistory.getMoves().get(moveHistory.size() - 1);
+            final String moveText = lastMove.toString();
+
+            if (lastMove.getMovedPiece().getAlliance().isWhite()) {
+                this.model.setValueAt(moveText + calculateCheckAndCheckMateHash(board), currentRow, 0);
+            }
+            else if (lastMove.getMovedPiece().getAlliance().isBlack()) {
+                this.model.setValueAt(moveText + calculateCheckAndCheckMateHash(board), currentRow - 1, 1);
+            }
+        }
+
+        final JScrollBar vertical = scrollPane.getVerticalScrollBar();
+        vertical.setValue(vertical.getMaximum());
+
+    }
+
+    void redo(final Board board,final Table2.MoveLog moveHistory) {
         int currentRow = 0;
         this.model.clear();
         for (final Move move : moveHistory.getMoves()) {

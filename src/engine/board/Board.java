@@ -57,6 +57,7 @@ public final class Board {
         this.transitionMove = builder.transitionMove != null ? builder.transitionMove : MoveFactory.getNullMove();
     }
 
+    // Creates a GameBoard
     private List<Tile> createGameboard(Builder builder) {
         final List<Tile> tiles = new ArrayList<>();
         for(int i =0; i<BoardUtils.NUM_TILES;i++){
@@ -65,6 +66,7 @@ public final class Board {
         return Collections.unmodifiableList(tiles);
     }
 
+    // Calculate All the Active Pieces of an Aliiance
     private static Collection<Piece> calculateActivePieces(final List<Tile> gameBoard, final Alliance alliance){
         final List<Piece> activePieces = new ArrayList<>();
         for(final Tile tile : gameBoard){
@@ -78,12 +80,18 @@ public final class Board {
         return Collections.unmodifiableList(activePieces);
     }
 
+    // Calculate all the Legal moves of an Alliance
     private Collection<Move> calculateLegalMoves(final Collection<Piece> pieces) {
         final List<Move>  legalMoves = new ArrayList<>();
         for(final Piece piece : pieces){
             legalMoves.addAll(piece.calculateLegalMoves(this));
         }
         return Collections.unmodifiableList(legalMoves);
+    }
+
+    // Calculate All the Legal Moves
+    public Iterable<Move> getAllLegalMoves() {
+        return Iterables.unmodifiableIterable(Iterables.concat(this.whitePlayer.getLegalMoves(),this.blackPlayer.getLegalMoves()));
     }
 
     @Override
@@ -127,9 +135,10 @@ public final class Board {
         return this.boardConfig.get(coordinate);
     }
 
+    // Initializes the GameBoard
     public static Board createStandardBoard() {
         final Builder builder = new Builder();
-        // Black Layout
+   
         builder.setPiece(new Rook(Alliance.BLACK, 0));
         builder.setPiece(new Knight(Alliance.BLACK, 1));
         builder.setPiece(new Bishop(Alliance.BLACK, 2));
@@ -146,7 +155,7 @@ public final class Board {
         builder.setPiece(new Pawn(Alliance.BLACK, 13));
         builder.setPiece(new Pawn(Alliance.BLACK, 14));
         builder.setPiece(new Pawn(Alliance.BLACK, 15));
-        // White Layout
+       
         builder.setPiece(new Pawn(Alliance.WHITE, 48));
         builder.setPiece(new Pawn(Alliance.WHITE, 49));
         builder.setPiece(new Pawn(Alliance.WHITE, 50));
@@ -172,8 +181,6 @@ public final class Board {
         return gameboard.get(coordinate);
     }
 
-
-
     public static class Builder {
 
         Map<Integer, Piece> boardConfig;
@@ -184,28 +191,25 @@ public final class Board {
         public Builder() {
             this.boardConfig = new HashMap<>();
         }
-
+        // Setting Piece on the Board
         public Builder setPiece(final Piece piece) {
             this.boardConfig.put(piece.getPiecePosition(), piece);
             return this;
         }
-
+        //Setting Movemaking Alliance
         public Builder setMoveMaker(final Alliance nextMoveMaker) {
             this.nextMoveMaker = nextMoveMaker;
             return this;
         }
-
+        // Building board
         public Board build() {
             return new Board(this);
         }
-
+        // Setting EnPassantPawn
         public void setEnPassantPawn(Pawn enPassantPawn) {
             this.enPassantPawn = enPassantPawn;
         }
 
-    }
-    public Iterable<Move> getAllLegalMoves() {
-        return Iterables.unmodifiableIterable(Iterables.concat(this.whitePlayer.getLegalMoves(),this.blackPlayer.getLegalMoves()));
     }
 
 }

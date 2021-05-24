@@ -76,24 +76,30 @@ public abstract class Move {
         return null;
     }
 
+    // To execute a Move
     public Board execute() {
         final Board.Builder builder = new Board.Builder();
 
+        // Sets all the unmoved pieces on the board
         for (final Piece piece : this.board.currentPlayer().getActivePieces()){
             if(!this.movedPiece.equals(piece)){
                 builder.setPiece(piece);
             }
         }
 
+        // Sets all the opponent piecs on the board
         for(final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()){
             builder.setPiece(piece);
         }
 
+        // Sets the Updated moved piece on the board
         builder.setPiece(this.movedPiece.movePiece(this));
+        // Sets Movemaker as the opponent's Alliance
         builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
         return builder.build();
     }
 
+    // Simple Move to an Empty tile
     public static final class MajorMove extends Move {
 
         public MajorMove(final Board board,final Piece movedPiece,final int destinatinationCoordinate) {
@@ -109,24 +115,6 @@ public abstract class Move {
         public String toString(){
             return movedPiece.getPieceType().toString() + BoardUtils.getPositionAtCoordinate(this.destinatinationCoordinate);
         }
-    }
-
-    public static class MajorAttackMove extends AttackMove{
-        public MajorAttackMove(final Board board, final Piece pieceMoved, final int destinatinationCoordinate, final Piece pieceAttacked){
-            super(board, pieceMoved, destinatinationCoordinate, pieceAttacked);
-        }
-
-        @Override
-        public boolean equals(final Object X){
-            return this == X || X instanceof MajorAttackMove && super.equals(X);
-        }
-
-        @Override 
-        public String toString(){
-            return movedPiece.getPieceType().toString() + BoardUtils.getPositionAtCoordinate(this.destinatinationCoordinate);
-        }
-        
-
     }
 
     public static class AttackMove extends Move{
@@ -169,6 +157,24 @@ public abstract class Move {
 
     }
 
+    // Simple Attack Move to Capture Oponent's Piece on destination tile
+    public static class MajorAttackMove extends AttackMove{
+        public MajorAttackMove(final Board board, final Piece pieceMoved, final int destinatinationCoordinate, final Piece pieceAttacked){
+            super(board, pieceMoved, destinatinationCoordinate, pieceAttacked);
+        }
+
+        @Override
+        public boolean equals(final Object X){
+            return this == X || X instanceof MajorAttackMove && super.equals(X);
+        }
+
+        @Override 
+        public String toString(){
+            return movedPiece.getPieceType().toString() + BoardUtils.getPositionAtCoordinate(this.destinatinationCoordinate);
+        }
+    }
+
+    // Simple Pawn Move 
     public static final class PawnMove extends Move {
 
         public PawnMove(final Board board,final Piece movedPiece,final int destinatinationCoordinate) {
@@ -187,6 +193,7 @@ public abstract class Move {
 
     }
 
+    // Simple Pawn Cross Attack
     public static class PawnAttackMove extends AttackMove {
 
         public PawnAttackMove(final Board board,final Piece movedPiece,final int destinatinationCoordinate, final Piece attackedPiece) {
@@ -205,6 +212,7 @@ public abstract class Move {
 
     }
 
+    // Pawn En Passant Move (If Opponent plays Pawn Jump then it can be attacke dusing En passant) 
     public static final class PawnEnPassantAttackMove extends PawnAttackMove {
 
         public PawnEnPassantAttackMove(final Board board,final Piece movedPiece,final int destinatinationCoordinate, final Piece attackedPiece) {
@@ -238,6 +246,7 @@ public abstract class Move {
 
     }
 
+    // (Queen)
     public static class PawnPromotion extends Move{
         final Move decoratedMove;
         final Pawn promotedPawn;
@@ -291,6 +300,7 @@ public abstract class Move {
         }
     }
 
+    // Pawn can Move 2 Step in the Begining
     public static final class PawnJump extends Move {
 
         public PawnJump(final Board board,final Piece movedPiece,final int destinatinationCoordinate) {
@@ -329,6 +339,7 @@ public abstract class Move {
 
     }
 
+    // Castling Move (KingSide + QueenSide)
     static abstract class CastleMove extends Move {
 
         protected final Rook castleRook;

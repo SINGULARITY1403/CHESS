@@ -38,12 +38,9 @@ public class BlackPlayer extends Player{
             if(!this.board.getTile(5).isTileOccupied() && !this.board.getTile(6).isTileOccupied()){
                 final Tile rookTile = this.board.getTile(7);
 
-                if(rookTile.isTileOccupied() && rookTile.getPiece().isFirstMove()){
-                    if((Player.calculateAttacksOnTile(5, opponentLegals)).isEmpty() && 
-                        (Player.calculateAttacksOnTile(6, opponentLegals)).isEmpty() &&    
-                            rookTile.getPiece().getPieceType().isRook()){
-                        
-                                kingCastles.add(new Move.KingSideCastle(this.board, this.playerKing, 6, (Rook)rookTile.getPiece(), rookTile.getTileCoordinate(), 5));
+                if(rookTile.isTileOccupied() && rookTile.getPiece().isFirstMove()){ 
+                    if((Player.calculateAttacksOnTile(5, opponentLegals)).isEmpty() && (Player.calculateAttacksOnTile(6, opponentLegals)).isEmpty() && rookTile.getPiece().getPieceType().isRook()){
+                        kingCastles.add(new Move.KingSideCastle(this.board, this.playerKing, 6, (Rook)rookTile.getPiece(), rookTile.getTileCoordinate(), 5));
                     }
                 }
             }
@@ -52,12 +49,8 @@ public class BlackPlayer extends Player{
                 final Tile rookTile = this.board.getTile(0);
 
                 if(rookTile.isTileOccupied() && rookTile.getPiece().isFirstMove()){
-                    if((Player.calculateAttacksOnTile(1, opponentLegals)).isEmpty() && 
-                        (Player.calculateAttacksOnTile(2, opponentLegals)).isEmpty() && 
-                            (Player.calculateAttacksOnTile(3, opponentLegals)).isEmpty() && 
-                                rookTile.getPiece().getPieceType().isRook()){
-                       
-                                    kingCastles.add(new Move.QueenSideCastle(this.board, this.playerKing, 2, (Rook)rookTile.getPiece(), rookTile.getTileCoordinate(), 3));
+                    if((Player.calculateAttacksOnTile(1, opponentLegals)).isEmpty() && (Player.calculateAttacksOnTile(2, opponentLegals)).isEmpty() && (Player.calculateAttacksOnTile(3, opponentLegals)).isEmpty() && rookTile.getPiece().getPieceType().isRook()){
+                        kingCastles.add(new Move.QueenSideCastle(this.board, this.playerKing, 2, (Rook)rookTile.getPiece(), rookTile.getTileCoordinate(), 3));
                     }
                 }
             }

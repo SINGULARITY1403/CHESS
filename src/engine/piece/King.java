@@ -15,19 +15,14 @@ public final class King extends Piece {
 
     private final static int[] CANDIDATE_MOVE_COORDINATES = { -9, -8, -7, -1, 1, 7, 8, 9 };
 
-    public King(final Alliance alliance, final int piecePosition,
-    final boolean kingSideCastleCapable,
-    final boolean queenSideCastleCapable) {
+    public King(final Alliance alliance, final int piecePosition, final boolean kingSideCastleCapable, final boolean queenSideCastleCapable) {
         super(PieceType.KING ,alliance, piecePosition, true);
         this.isCastled = false;
         this.kingSideCastleCapable = kingSideCastleCapable;
         this.queenSideCastleCapable = queenSideCastleCapable;
     }
 
-    public King(final Alliance alliance, final int piecePosition, final boolean isFirstMove,
-    final boolean isCastled,
-    final boolean kingSideCastleCapable,
-    final boolean queenSideCastleCapable) {
+    public King(final Alliance alliance, final int piecePosition, final boolean isFirstMove, final boolean isCastled, final boolean kingSideCastleCapable, final boolean queenSideCastleCapable) {
         super(PieceType.KING ,alliance, piecePosition, isFirstMove);
         this.isCastled = isCastled;
         this.kingSideCastleCapable = kingSideCastleCapable;
@@ -82,17 +77,11 @@ public final class King extends Piece {
         return new King(move.getMovedPiece().getAlliance(), move.getDestinationCoordinate(),false, move.isCastlingMove(), false, false);
     }
 
-    private static boolean isFirstColumnExclusion(final int currentCandidate,
-                                                  final int candidateDestinationCoordinate) {
-        return BoardUtils.FIRST_COLUMN[currentCandidate]
-                && ((candidateDestinationCoordinate == -9) || (candidateDestinationCoordinate == -1) ||
-                (candidateDestinationCoordinate == 7));
+    private static boolean isFirstColumnExclusion(final int currentCandidate, final int candidateDestinationCoordinate) {
+        return BoardUtils.FIRST_COLUMN[currentCandidate] && ((candidateDestinationCoordinate == -9) || (candidateDestinationCoordinate == -1) || (candidateDestinationCoordinate == 7));
     }
 
-    private static boolean isEighthColumnExclusion(final int currentCandidate,
-                                                   final int candidateDestinationCoordinate) {
-        return BoardUtils.EIGHT_COLUMN[currentCandidate]
-                && ((candidateDestinationCoordinate == -7) || (candidateDestinationCoordinate == 1) ||
-                (candidateDestinationCoordinate == 9));
+    private static boolean isEighthColumnExclusion(final int currentCandidate, final int candidateDestinationCoordinate) {
+        return BoardUtils.EIGHT_COLUMN[currentCandidate] && ((candidateDestinationCoordinate == -7) || (candidateDestinationCoordinate == 1) || (candidateDestinationCoordinate == 9));
     }
 }
