@@ -40,18 +40,16 @@ public class Table2 extends Observable{
     private Piece humanMovedPiece;
     private BoardDirection boardDirection;
     private boolean highlightLegalMoves;
-    private PlayerType whitePlayerType;
-    private PlayerType blackPlayerType;
     String panelName1 = Login2.get().getUser1Name();
     String panelName2 = Login2.get().getUser2Name();
 
     private Color lightTileColor = Color.decode("#FFFFFF");
     private Color darkTileColor = Color.decode("#606060");
 
-    private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(600, 600);
-    private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
-    private static final Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
-    private static String defaultPieceImagesPath = "art/";
+    private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(700, 700);
+    private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(500, 450);
+    private static final Dimension TILE_PANEL_DIMENSION = new Dimension(15, 15);
+    private static String defaultPieceImagesPath = "Images folder/";
 
     private static final Table2 INSTANCE = new Table2(Login2.get().getUser1Alliance(), Login2.get().getUser2Alliance());
 
@@ -80,8 +78,6 @@ public class Table2 extends Observable{
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         this.gameFrame.setVisible(true);
         this.gameFrame.setLocationRelativeTo(null);
-        this.whitePlayerType = PlayerType.HUMAN;
-        this.blackPlayerType = PlayerType.HUMAN;
     }
 
     public static Table2 get() {

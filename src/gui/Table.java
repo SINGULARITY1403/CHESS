@@ -55,10 +55,10 @@ public class Table extends Observable{
     private Color darkTileColor = Color.decode("#606060");
     
 
-    private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(600, 600);
-    private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
-    private static final Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
-    private static String defaultPieceImagesPath = "art/";
+    private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(700, 700);
+    private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(500, 450);
+    private static final Dimension TILE_PANEL_DIMENSION = new Dimension(15, 15);
+    private static String defaultPieceImagesPath = "Images folder/";
 
     private static final Table INSTANCE = new Table(Login.get().getUser1Alliance(), Login.get().getSearchDepth());
 
