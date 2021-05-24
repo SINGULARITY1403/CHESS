@@ -36,7 +36,7 @@ public class BoardUtils {
                 "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"));
     }
 
-    // Initializes all the position
+
     private static Map<String, Integer> initializePositionToCoordinateMap() {
         final Map<String, Integer> positionToCoordinate = new HashMap<>();
         for (int i = 0; i < NUM_TILES; i++) {
