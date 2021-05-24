@@ -79,6 +79,7 @@ public class Table2 extends Observable{
         this.gameFrame.add(this.userNamePanel2, BorderLayout.NORTH);
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         this.gameFrame.setVisible(true);
+        this.gameFrame.setLocationRelativeTo(null);
         this.whitePlayerType = PlayerType.HUMAN;
         this.blackPlayerType = PlayerType.HUMAN;
     }

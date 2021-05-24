@@ -5,8 +5,6 @@ import src.engine.board.Move;
 
 public interface MoveStrategy {
 
-    long getNumBoardsEvaluated();
-
     Move execute(Board board);
 }
  
