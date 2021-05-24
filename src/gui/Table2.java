@@ -193,12 +193,12 @@ public class Table2 extends Observable{
         public void update(final Observable o, final Object arg){
 
             if(Table2.get().getGameBoard().currentPlayer().isInCheckmate()){
-                System.out.println("Game Over, " + Table2.get().getGameBoard().currentPlayer().getAlliance() + "is in CheckMate !" );
+                System.out.println("Game Over, " + Table2.get().getGameBoard().currentPlayer().getAlliance() + " is in CheckMate !" );
                 Table2.get().GameOver(Table2.get().getGameBoard().currentPlayer());
             }
 
             if(Table2.get().getGameBoard().currentPlayer().isInStalemate()){
-                System.out.println("Game Over, " + Table2.get().getGameBoard().currentPlayer().getAlliance() + "is in StaleMate !" );
+                System.out.println("Game Over, " + Table2.get().getGameBoard().currentPlayer().getAlliance() + " is in StaleMate !" );
                 Table2.get().GameOver(Table2.get().getGameBoard().currentPlayer());
             }
         }
@@ -405,7 +405,7 @@ public class Table2 extends Observable{
                 for (final Move move : pieceLegalMoves(board)) {
                     if (move.getDestinationCoordinate() == this.tileId) {
                         try {
-                            add(new JLabel(new ImageIcon(ImageIO.read(new File("art/green_dot.png")))));
+                            add(new JLabel(new ImageIcon(ImageIO.read(new File("Images folder/green_dot.png")))));
                         }
                         catch (final IOException e) {
                             e.printStackTrace();
