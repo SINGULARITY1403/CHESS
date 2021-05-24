@@ -30,7 +30,7 @@ class TakenPiecesPanel2 extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private static final Color PANEL_COLOR = Color.decode("0xFDF5E6");
-    private static final Dimension TAKEN_PIECES_PANEL_DIMENSION = new Dimension(40, 80);
+    private static final Dimension TAKEN_PIECES_PANEL_DIMENSION = new Dimension(100, 200);
     private static final EtchedBorder PANEL_BORDER = new EtchedBorder(EtchedBorder.RAISED);
 
     public TakenPiecesPanel2() {
@@ -87,7 +87,7 @@ class TakenPiecesPanel2 extends JPanel {
                         + ".gif"));
                 final ImageIcon ic = new ImageIcon(image);
                 final JLabel imageLabel = new JLabel(new ImageIcon(ic.getImage().getScaledInstance(
-                        ic.getIconWidth() - 15, ic.getIconWidth() - 15, Image.SCALE_SMOOTH)));
+                        ic.getIconWidth() - 30, ic.getIconWidth() - 30, Image.SCALE_SMOOTH)));
                 this.southPanel.add(imageLabel);
             }
             catch (final IOException e) {
@@ -102,7 +102,7 @@ class TakenPiecesPanel2 extends JPanel {
                         + ".gif"));
                 final ImageIcon ic = new ImageIcon(image);
                 final JLabel imageLabel = new JLabel(new ImageIcon(ic.getImage().getScaledInstance(
-                        ic.getIconWidth() - 15, ic.getIconWidth() - 15, Image.SCALE_SMOOTH)));
+                        ic.getIconWidth() - 30, ic.getIconWidth() - 30, Image.SCALE_SMOOTH)));
                 this.northPanel.add(imageLabel);
 
             } catch (final IOException e) {
